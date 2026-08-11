@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Webex Anruf-Notizen</title>
-  
-  <!-- Webex Embedded App SDK -->
   <script src="https://unpkg.com/webex-embedded-app-sdk"></script>
 
   <style>
@@ -77,8 +75,7 @@
   </div>
 
   <script>
-    // Exakte Domain-URL für den Webex-Sidebar-Trigger (8-mal die '2')
-    const APP_URL = 'https://tester2022222222-cmd.github.io/webex-notiz-app/';
+    const APP_URL = 'https://tester202222222-cmd.github.io/webex-notiz-app/';
     let app = null;
 
     window.addEventListener('DOMContentLoaded', async () => {
@@ -88,74 +85,86 @@
         try {
           app = new window.Webex.Application();
           await app.onReady();
-          console.log("[Webex SDK] Initialisiert und bereit.");
+          console.log("[Webex SDK] Bereit!");
 
-          // 1. TELEPHONY EVENT (Direkte Telefonanrufe / PSTN / SIP)
-          app.listen('telephony:telephonyState', (state) => {
-            console.log("[Webex Telephony Event]", state);
-            handleTelephonyState(state);
-          });
+          // 1. SOFORT PRÜFEN: Läuft aktuell bereits ein Anruf/Meeting?
+          await checkActiveCall();
 
-          // 2. MEETING EVENT (Webex Meetings / Direkt-Calls)
+          // 2. LAUSCHEN: Webex Anruf / Meeting Events
           app.listen('meeting:info', (info) => {
-            console.log("[Webex Meeting Event]", info);
             handleMeetingInfo(info);
           });
 
+          // 3. LAUSCHEN: Webex Calling (Festnetz/PSTN)
+          app.listen('telephony:telephonyState', (state) => {
+            handleTelephonyState(state);
+          });
+
         } catch (err) {
-          console.error("[Webex SDK] Initialisierungsfehler:", err);
+          console.error("[Webex SDK] Fehler:", err);
         }
-      } else {
-        console.warn("[Webex SDK] Seite läuft im Standard-Browser (nicht im Webex Client).");
       }
     });
 
-    // Verarbeitet Anrufe
+    // Prüft beim App-Start sofort aktive Gespräche
+    async function checkActiveCall() {
+      if (!app) return;
+
+      // Methode A: Über App-Kontext
+      if (app.context) {
+        if (app.context.meetingTitle) {
+          setCallerDetails(app.context.meetingTitle, 'Aktiver Anruf');
+          triggerSidebarAutoOpen();
+          return;
+        }
+      }
+
+      // Methode B: Über getMeeting API
+      if (typeof app.getMeeting === 'function') {
+        try {
+          const meeting = await app.getMeeting();
+          if (meeting && meeting.title) {
+            setCallerDetails(meeting.title, 'Aktiver Anruf');
+            triggerSidebarAutoOpen();
+          }
+        } catch (e) {
+          console.log("Kein aktives Meeting beim Start.");
+        }
+      }
+    }
+
+    function handleMeetingInfo(info) {
+      if (info && info.title) {
+        setCallerDetails(info.title, 'Webex Anruf / Meeting');
+        triggerSidebarAutoOpen();
+      }
+    }
+
     function handleTelephonyState(state) {
       if (!state) return;
-
-      const nameEl = document.getElementById('caller-name');
-      const numEl = document.getElementById('caller-number');
       const party = state.remoteParty || {};
-      
       const callerName = party.name || party.number || 'Unbekannter Anrufer';
-      const callerNum = party.number ? `Tel: ${party.number}` : '';
 
-      if (state.state === 'Ringing') {
-        nameEl.innerText = callerName;
-        numEl.innerText = callerNum;
-        updateBadge('Klingelt...', 'ringing');
+      if (state.state === 'Ringing' || state.state === 'Connected') {
+        setCallerDetails(callerName, party.number ? `Tel: ${party.number}` : 'Telefonanruf');
         triggerSidebarAutoOpen();
-
-      } else if (state.state === 'Connected') {
-        nameEl.innerText = callerName;
-        numEl.innerText = callerNum;
-        updateBadge('In Gespräch', 'connected');
-        triggerSidebarAutoOpen();
-
       } else if (state.state === 'Disconnected' || state.state === 'Idle') {
         updateBadge('Standby', '');
       }
     }
 
-    // Verarbeitet Meetings
-    function handleMeetingInfo(info) {
-      if (info && info.title) {
-        document.getElementById('caller-name').innerText = info.title;
-        document.getElementById('caller-number').innerText = 'Webex Meeting / Call';
-        updateBadge('In Meeting', 'connected');
-        triggerSidebarAutoOpen();
-      }
+    function setCallerDetails(name, subtext) {
+      document.getElementById('caller-name').innerText = name;
+      document.getElementById('caller-number').innerText = subtext;
+      updateBadge('In Gespräch', 'connected');
     }
 
-    // Erwirkt das automatische Öffnen der Seitenleiste
     function triggerSidebarAutoOpen() {
       if (app && typeof app.setSidebarUrl === 'function') {
         try {
           app.setSidebarUrl(APP_URL);
-          console.log("[Webex SDK] Sidebar getriggert.");
         } catch (e) {
-          console.error("[Webex SDK] Sidebar-Trigger fehlgeschlagen:", e);
+          console.error("Sidebar Auto-Open Error:", e);
         }
       }
     }
@@ -166,15 +175,11 @@
       badge.className = 'status-badge ' + className;
     }
 
-    // Speichert Notizen lokal im Browser (LocalStorage)
     function saveNote() {
       const caller = document.getElementById('caller-name').innerText;
       const text = document.getElementById('note-text').value.trim();
 
-      if (!text) {
-        alert("Bitte Notiztext eingeben.");
-        return;
-      }
+      if (!text) return alert("Bitte Notiztext eingeben.");
 
       const newEntry = {
         time: new Date().toLocaleString('de-DE', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' }),
