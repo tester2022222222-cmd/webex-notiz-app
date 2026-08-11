@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anruf-Notizen für Webex</title>
+  <!-- Webex Embedded Apps SDK -->
+  <script src="https://unpkg.com/webex-embedded-app-sdk"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      background-color: #f4f5f7;
+      color: #121212;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 100vh;
+    }
+    .header {
+      background: #ffffff;
+      padding: 12px 16px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .header h2 {
+      font-size: 16px;
+      color: #007a87;
+    }
+    .caller-card {
+      background: #ffffff;
+      padding: 16px;
+      border-radius: 8px;
+      border-left: 4px solid #007a87;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .caller-card label {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #606060;
+      font-weight: bold;
+    }
+    .caller-card p {
+      font-size: 15px;
+      font-weight: 600;
+      margin-top: 4px;
+      color: #222;
+    }
+    .note-section {
+      background: #ffffff;
+      padding: 16px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex-grow: 1;
+    }
+    .note-section label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #333;
+    }
+    textarea {
+      width: 100%;
+      height: 180px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      resize: vertical;
+      outline: none;
+    }
+    textarea:focus {
+      border-color: #007a87;
+      box-shadow: 0 0 0 2px rgba(0,122,135,0.2);
+    }
+    .btn {
+      background-color: #007a87;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .btn:hover {
+      background-color: #005a63;
+    }
+    .status-msg {
+      font-size: 12px;
+      color: #2e7d32;
+      display: none;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h2>📝 Webex Anruf-Notizen</h2>
+  </div>
+
+  <div class="caller-card">
+    <label>Aktueller Anrufer</label>
+    <p id="caller-name">Warte auf Anruf...</p>
+  </div>
+
+  <div class="note-section">
+    <label for="note-text">Gesprächsnotiz eintragen:</label>
+    <textarea id="note-text" placeholder="Notizen zum Gespräch hier eingeben..."></textarea>
+    <button class="btn" onclick="saveNote()">Notiz speichern</button>
+    <p class="status-msg" id="status">✓ Notiz erfolgreich gespeichert!</p>
+  </div>
+
+  <script>
+    let app;
+
+    // Webex Embedded App SDK initialisieren
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.Webex && window.Webex.Application) {
+        app = new window.Webex.Application();
+        
+        app.onReady().then(() => {
+          console.log("Webex Embedded App einsatzbereit!");
+          
+          // Anruf-Details beim Start abrufen
+          if (app.context) {
+            updateCallerInfo(app.context);
+          }
+
+          // Auf Anruf- / Meeting-Events lauschen
+          app.listen('meeting:info', (info) => {
+            if (info && info.title) {
+              document.getElementById('caller-name').innerText = info.title;
+            }
+          });
+        }).catch((err) => {
+          console.error("Fehler beim Initialisieren des Webex SDKs:", err);
+          document.getElementById('caller-name').innerText = "Anrufer (Vorschau / Testmodus)";
+        });
+      } else {
+        document.getElementById('caller-name').innerText = "Vorschau (außerhalb von Webex)";
+      }
+    });
+
+    function updateCallerInfo(context) {
+      if (context.meetingTitle) {
+        document.getElementById('caller-name').innerText = context.meetingTitle;
+      } else if (context.userId) {
+        document.getElementById('caller-name').innerText = "User ID: " + context.userId;
+      } else {
+        document.getElementById('caller-name').innerText = "Unbekannter Anrufer";
+      }
+    }
+
+    function saveNote() {
+      const noteContent = document.getElementById('note-text').value;
+      const caller = document.getElementById('caller-name').innerText;
+      
+      if (!noteContent.trim()) {
+        alert("Bitte geben Sie zuerst eine Notiz ein.");
+        return;
+      }
+
+      // Notiz-Daten verarbeiten / ausgeben
+      const timestamp = new Date().toLocaleString('de-DE');
+      console.log("Gespeicherte Notiz:", { caller, note: noteContent, time: timestamp });
+
+      // Erfolgsmeldung anzeigen
+      const statusEl = document.getElementById('status');
+      statusEl.style.display = 'block';
+      setTimeout(() => {
+        statusEl.style.display = 'none';
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
