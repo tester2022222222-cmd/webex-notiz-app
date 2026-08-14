@@ -87,15 +87,12 @@
           await app.onReady();
           console.log("[Webex SDK] Bereit!");
 
-          // 1. SOFORT PRÜFEN: Läuft aktuell bereits ein Anruf/Meeting?
           await checkActiveCall();
 
-          // 2. LAUSCHEN: Webex Anruf / Meeting Events
           app.listen('meeting:info', (info) => {
             handleMeetingInfo(info);
           });
 
-          // 3. LAUSCHEN: Webex Calling (Festnetz/PSTN)
           app.listen('telephony:telephonyState', (state) => {
             handleTelephonyState(state);
           });
@@ -106,11 +103,9 @@
       }
     });
 
-    // Prüft beim App-Start sofort aktive Gespräche
     async function checkActiveCall() {
       if (!app) return;
 
-      // Methode A: Über App-Kontext
       if (app.context) {
         if (app.context.meetingTitle) {
           setCallerDetails(app.context.meetingTitle, 'Aktiver Anruf');
@@ -119,7 +114,6 @@
         }
       }
 
-      // Methode B: Über getMeeting API
       if (typeof app.getMeeting === 'function') {
         try {
           const meeting = await app.getMeeting();
@@ -227,5 +221,8 @@
       });
     }
   </script>
+
+  <!-- HERE GEHÖRT DAS CHAT-WIDGET HIN: -->
+  <script src="https://app.ihre-domain/livechat/embed.js" data-widget-id="DEINE_WIDGET_ID" async></script>
 </body>
 </html>
