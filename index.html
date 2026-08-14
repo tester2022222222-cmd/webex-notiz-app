@@ -3,189 +3,287 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Webex Anruf-Notizen</title>
-  <script src="https://unpkg.com/webex-embedded-app-sdk"></script>
+  <title>Smart AI Notes 2026</title>
+  
+  <!-- Inter Font für modernes Typo-Design -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --primary: #007a87;
-      --primary-hover: #005a63;
-      --bg: #f4f5f7;
-      --card-bg: #ffffff;
-      --text: #121212;
-      --text-muted: #606060;
-      --border: #e0e0e0;
-      --success: #2e7d32;
+      --bg: #090a0f;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary: #00f2fe;
+      --secondary: #4facfe;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --glow: rgba(0, 242, 254, 0.15);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); padding: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 100vh; }
-    
-    .header { background: var(--card-bg); padding: 12px; border-radius: 8px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-    .header h2 { font-size: 15px; color: var(--primary); font-weight: 700; }
-    
-    .status-badge { font-size: 11px; padding: 4px 8px; border-radius: 12px; background: #eee; color: var(--text-muted); font-weight: 600; }
-    .status-badge.ringing { background: #fff3e0; color: #e65100; border: 1px solid #ffe0b2; }
-    .status-badge.connected { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
 
-    .card { background: var(--card-bg); padding: 12px; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-    .card-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 700; margin-bottom: 4px; }
-    .caller-info { font-size: 14px; font-weight: 600; word-break: break-word; color: #1e1e1e; }
-    .caller-details { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(79, 172, 254, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(0, 242, 254, 0.1) 0px, transparent 50%);
+    }
 
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    textarea { width: 100%; height: 140px; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; outline: none; resize: vertical; background: #fafafa; }
-    textarea:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 2px rgba(0,122,135,0.15); }
+    /* Container Glow */
+    .app-container {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+    }
 
-    .btn { background-color: var(--primary); color: white; border: none; padding: 10px 14px; font-size: 13px; font-weight: 600; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
-    .btn:hover { background-color: var(--primary-hover); }
+    /* Header Styling */
+    .header {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      padding: 20px 24px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
 
-    .toast { font-size: 12px; color: var(--success); font-weight: 600; display: none; text-align: center; }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-    .history { max-height: 160px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
-    .history-item { background: #fafafa; padding: 8px; border-radius: 6px; border: 1px solid var(--border); font-size: 12px; }
-    .history-item .time { font-size: 10px; color: var(--text-muted); margin-bottom: 2px; }
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      font-weight: 800;
+      font-size: 18px;
+      box-shadow: 0 0 15px var(--glow);
+    }
+
+    .header h1 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(to right, #fff, var(--text-muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .status-pill {
+      font-size: 12px;
+      padding: 6px 14px;
+      border-radius: 100px;
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      background-color: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #10b981;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+
+    /* Hero / Glass Card */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      padding: 28px;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      transition: border-color 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .card-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--primary);
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    /* Input & Area Styling */
+    textarea {
+      width: 100%;
+      height: 120px;
+      padding: 16px;
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      font-size: 14px;
+      outline: none;
+      resize: none;
+      background: rgba(0, 0, 0, 0.2);
+      color: var(--text);
+      transition: all 0.3s ease;
+      margin-bottom: 16px;
+    }
+
+    textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 20px var(--glow);
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    /* Modern 2026 Button */
+    .btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #000;
+      border: none;
+      padding: 14px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 4px 20px var(--glow);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(0, 242, 254, 0.3);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    /* History List */
+    .history {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .history-item {
+      background: rgba(255, 255, 255, 0.02);
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .history-item span {
+      color: var(--text);
+    }
+
+    .toast {
+      font-size: 12px;
+      color: #10b981;
+      text-align: center;
+      margin-top: 10px;
+      display: none;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <h2>📝 Telefon-Notiz</h2>
-    <span id="app-status" class="status-badge">Standby</span>
-  </div>
+  <div class="app-container">
+    
+    <!-- Top Header Navigation -->
+    <header class="header">
+      <div class="brand">
+        <div class="brand-icon">AI</div>
+        <h1>Smart Notes 2026</h1>
+      </div>
+      <div class="status-pill">
+        <div class="status-dot"></div>
+        Live System
+      </div>
+    </header>
 
-  <div class="card">
-    <div class="card-title">Anrufer / Gesprächspartner</div>
-    <div id="caller-name" class="caller-info">Warte auf Anruf...</div>
-    <div id="caller-number" class="caller-details">-</div>
-  </div>
+    <!-- Main Note Input -->
+    <main class="card">
+      <div class="card-title">Schnellnotiz erstellen</div>
+      <textarea id="note-text" placeholder="Schreibe deine Gedanken oder Notizen hier..."></textarea>
+      <button class="btn" onclick="saveNote()">Notiz speichern</button>
+      <p id="toast" class="toast">✓ Notiz erfolgreich gesichert!</p>
+    </main>
 
-  <div class="card form-group">
-    <div class="card-title">Gesprächsnotiz</div>
-    <textarea id="note-text" placeholder="Notizen zum Gespräch eintragen..."></textarea>
-    <button class="btn" onclick="saveNote()">Notiz speichern</button>
-    <p id="toast" class="toast">✓ Notiz gespeichert!</p>
-  </div>
+    <!-- History View -->
+    <section class="card">
+      <div class="card-title">Letzte Einträge</div>
+      <div id="history-list" class="history">
+        <div class="history-item">Noch keine Notizen vorhanden.</div>
+      </div>
+    </section>
 
-  <div class="card">
-    <div class="card-title">Gespeicherte Notizen</div>
-    <div id="history-list" class="history">
-      <div class="history-item" style="color: #888;">Noch keine Notizen im Verlauf.</div>
-    </div>
   </div>
 
   <script>
-    const APP_URL = 'https://tester2022222222-cmd.github.io/webex-notiz-app/';
-    let app = null;
-
-    window.addEventListener('DOMContentLoaded', async () => {
+    window.addEventListener('DOMContentLoaded', () => {
       loadHistory();
-
-      if (window.Webex && window.Webex.Application) {
-        try {
-          app = new window.Webex.Application();
-          await app.onReady();
-          console.log("[Webex SDK] Bereit!");
-
-          await checkActiveCall();
-
-          app.listen('meeting:info', (info) => {
-            handleMeetingInfo(info);
-          });
-
-          app.listen('telephony:telephonyState', (state) => {
-            handleTelephonyState(state);
-          });
-
-        } catch (err) {
-          console.error("[Webex SDK] Fehler:", err);
-        }
-      }
     });
 
-    async function checkActiveCall() {
-      if (!app) return;
-
-      if (app.context) {
-        if (app.context.meetingTitle) {
-          setCallerDetails(app.context.meetingTitle, 'Aktiver Anruf');
-          triggerSidebarAutoOpen();
-          return;
-        }
-      }
-
-      if (typeof app.getMeeting === 'function') {
-        try {
-          const meeting = await app.getMeeting();
-          if (meeting && meeting.title) {
-            setCallerDetails(meeting.title, 'Aktiver Anruf');
-            triggerSidebarAutoOpen();
-          }
-        } catch (e) {
-          console.log("Kein aktives Meeting beim Start.");
-        }
-      }
-    }
-
-    function handleMeetingInfo(info) {
-      if (info && info.title) {
-        setCallerDetails(info.title, 'Webex Anruf / Meeting');
-        triggerSidebarAutoOpen();
-      }
-    }
-
-    function handleTelephonyState(state) {
-      if (!state) return;
-      const party = state.remoteParty || {};
-      const callerName = party.name || party.number || 'Unbekannter Anrufer';
-
-      if (state.state === 'Ringing' || state.state === 'Connected') {
-        setCallerDetails(callerName, party.number ? `Tel: ${party.number}` : 'Telefonanruf');
-        triggerSidebarAutoOpen();
-      } else if (state.state === 'Disconnected' || state.state === 'Idle') {
-        updateBadge('Standby', '');
-      }
-    }
-
-    function setCallerDetails(name, subtext) {
-      document.getElementById('caller-name').innerText = name;
-      document.getElementById('caller-number').innerText = subtext;
-      updateBadge('In Gespräch', 'connected');
-    }
-
-    function triggerSidebarAutoOpen() {
-      if (app && typeof app.setSidebarUrl === 'function') {
-        try {
-          app.setSidebarUrl(APP_URL);
-        } catch (e) {
-          console.error("Sidebar Auto-Open Error:", e);
-        }
-      }
-    }
-
-    function updateBadge(text, className) {
-      const badge = document.getElementById('app-status');
-      badge.innerText = text;
-      badge.className = 'status-badge ' + className;
-    }
-
     function saveNote() {
-      const caller = document.getElementById('caller-name').innerText;
       const text = document.getElementById('note-text').value.trim();
-
-      if (!text) return alert("Bitte Notiztext eingeben.");
+      if (!text) return alert("Bitte gebe eine Notiz ein.");
 
       const newEntry = {
-        time: new Date().toLocaleString('de-DE', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' }),
-        caller: caller,
+        time: new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }),
         text: text
       };
 
-      let history = JSON.parse(localStorage.getItem('webex_notes_data') || '[]');
+      let history = JSON.parse(localStorage.getItem('app_notes_2026') || '[]');
       history.unshift(newEntry);
-      if (history.length > 15) history.pop();
+      if (history.length > 5) history.pop();
 
-      localStorage.setItem('webex_notes_data', JSON.stringify(history));
+      localStorage.setItem('app_notes_2026', JSON.stringify(history));
 
       document.getElementById('note-text').value = '';
       showToast();
@@ -194,17 +292,17 @@
 
     function loadHistory() {
       const historyEl = document.getElementById('history-list');
-      let history = JSON.parse(localStorage.getItem('webex_notes_data') || '[]');
+      let history = JSON.parse(localStorage.getItem('app_notes_2026') || '[]');
 
       if (history.length === 0) {
-        historyEl.innerHTML = '<div class="history-item" style="color: #888;">Noch keine Notizen im Verlauf.</div>';
+        historyEl.innerHTML = '<div class="history-item">Noch keine Notizen gespeichert.</div>';
         return;
       }
 
       historyEl.innerHTML = history.map(item => `
         <div class="history-item">
-          <div class="time">🕒 ${item.time} | 👤 <b>${escapeHtml(item.caller)}</b></div>
-          <div>${escapeHtml(item.text)}</div>
+          <span>${escapeHtml(item.text)}</span>
+          <small>${item.time}</small>
         </div>
       `).join('');
     }
