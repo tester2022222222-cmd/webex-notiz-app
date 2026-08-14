@@ -3,256 +3,263 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tadiplus Telecom GmbH | KI & Telekommunikation 2026</title>
+  <title>Smart Notes 2026</title>
   
-  <!-- Inter Font für modernes Typo-Design -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #07090e;
-      --surface: rgba(255, 255, 255, 0.03);
-      --border: rgba(255, 255, 255, 0.08);
+      --bg: #090a0f;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.08);
       --primary: #00f2fe;
       --secondary: #4facfe;
       --text: #f3f4f6;
       --text-muted: #9ca3af;
-      --glow: rgba(0, 242, 254, 0.15);
+      --glow: rgba(0, 242, 254, 0.2);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
 
     body {
       background-color: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      overflow-x: hidden;
-      background-image: 
-        radial-gradient(at 20% 0%, rgba(79, 172, 254, 0.15) 0px, transparent 50%),
-        radial-gradient(at 80% 100%, rgba(0, 242, 254, 0.1) 0px, transparent 50%);
-    }
-
-    /* Navigation */
-    nav {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      font-size: 20px;
-      font-weight: 900;
-      letter-spacing: -0.5px;
-      background: linear-gradient(135deg, #fff 30%, var(--primary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .logo-badge {
-      width: 10px;
-      height: 10px;
-      background: var(--primary);
-      border-radius: 50%;
-      box-shadow: 0 0 10px var(--primary);
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 32px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      transition: color 0.3s;
-    }
-
-    .nav-links a:hover {
-      color: #fff;
-    }
-
-    /* Hero Section */
-    .hero {
-      max-width: 1200px;
-      margin: 80px auto 100px;
-      padding: 0 24px;
-      text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(79, 172, 254, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(0, 242, 254, 0.1) 0px, transparent 50%);
     }
 
-    .tag {
-      background: rgba(0, 242, 254, 0.08);
-      border: 1px solid rgba(0, 242, 254, 0.2);
-      color: var(--primary);
-      padding: 6px 18px;
-      border-radius: 100px;
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 24px;
-      letter-spacing: 0.5px;
-    }
-
-    .hero h1 {
-      font-size: clamp(40px, 6vw, 72px);
-      font-weight: 900;
-      line-height: 1.1;
-      letter-spacing: -2px;
-      margin-bottom: 24px;
-      max-width: 900px;
-      background: linear-gradient(to bottom, #ffffff 40%, var(--text-muted));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero p {
-      font-size: 18px;
-      color: var(--text-muted);
-      max-width: 600px;
-      line-height: 1.6;
-      margin-bottom: 40px;
-    }
-
-    .cta-button {
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      color: #000;
-      padding: 16px 36px;
-      border-radius: 100px;
-      font-weight: 700;
-      font-size: 15px;
-      text-decoration: none;
-      box-shadow: 0 0 30px var(--glow);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .cta-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 45px rgba(0, 242, 254, 0.4);
-    }
-
-    /* Bento Grid Features */
-    .features {
-      max-width: 1200px;
-      margin: 0 auto 120px;
-      padding: 0 24px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    .app-container {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
       gap: 20px;
     }
 
+    .header {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      padding: 20px 24px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-icon {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      color: #000; font-weight: 800; font-size: 18px;
+      box-shadow: 0 0 15px var(--glow);
+    }
+
+    .header h1 {
+      font-size: 18px; font-weight: 700;
+      background: linear-gradient(to right, #fff, var(--text-muted));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .status-pill {
+      font-size: 12px; padding: 6px 14px; border-radius: 100px;
+      background: rgba(16, 185, 129, 0.1); color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.2); font-weight: 600;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .status-dot {
+      width: 6px; height: 6px; background-color: #10b981; border-radius: 50%;
+      box-shadow: 0 0 8px #10b981; animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
     .card {
-      background: var(--surface);
+      background: var(--card-bg); backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border); padding: 28px; border-radius: 24px;
+    }
+    .card-title {
+      font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
+      color: var(--primary); font-weight: 800; margin-bottom: 12px;
+    }
+
+    textarea {
+      width: 100%; height: 120px; padding: 16px; border: 1px solid var(--card-border);
+      border-radius: 16px; font-size: 14px; outline: none; resize: none;
+      background: rgba(0, 0, 0, 0.2); color: var(--text); margin-bottom: 16px;
+    }
+    textarea:focus { border-color: var(--primary); box-shadow: 0 0 20px var(--glow); }
+
+    .btn {
+      width: 100%; background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: #000; border: none; padding: 14px 20px; font-size: 14px; font-weight: 700;
+      border-radius: 14px; cursor: pointer; transition: transform 0.2s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+
+    .history { display: flex; flex-direction: column; gap: 10px; }
+    .history-item {
+      background: rgba(255, 255, 255, 0.02); padding: 14px 16px; border-radius: 12px;
+      border: 1px solid var(--card-border); font-size: 13px; color: var(--text-muted);
+    }
+
+    /* ------------------------------------------------------------- */
+    /* COOLER NEUER CHAT-BUTTON UNTEN LINKS 2026 STYLE               */
+    /* ------------------------------------------------------------- */
+    .custom-chat-trigger {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      background: rgba(15, 23, 42, 0.75);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 32px;
-      transition: border-color 0.3s, transform 0.3s;
+      border: 1px solid rgba(0, 242, 254, 0.3);
+      border-radius: 100px;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 242, 254, 0.2);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .card:hover {
-      border-color: rgba(255, 255, 255, 0.2);
-      transform: translateY(-4px);
+    .custom-chat-trigger:hover {
+      transform: translateY(-4px) scale(1.03);
+      border-color: var(--primary);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 242, 254, 0.4);
     }
 
-    .card-icon {
-      font-size: 28px;
-      margin-bottom: 20px;
-      display: inline-block;
+    .custom-chat-avatar {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #000;
+      position: relative;
     }
 
-    .card h3 {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 10px;
+    .custom-chat-avatar::after {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 10px; height: 10px;
+      background: #10b981;
+      border: 2px solid #090a0f;
+      border-radius: 50%;
     }
 
-    .card p {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.6;
+    .custom-chat-text {
+      display: flex;
+      flex-direction: column;
     }
 
-    /* Footer */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 40px 24px;
-      text-align: center;
-      color: var(--text-muted);
+    .custom-chat-title {
       font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
     }
 
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .hero h1 { font-size: 36px; }
+    .custom-chat-subtitle {
+      font-size: 11px;
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    /* Das originale hässliche Placetel-Standard-Icon ausblenden */
+    #placetel-livechat-button, 
+    iframe[id*="placetel-livechat-button"] {
+      opacity: 0 !important;
+      pointer-events: none !important;
     }
   </style>
 </head>
 <body>
 
-  <!-- Navigation -->
-  <nav>
-    <div class="logo">
-      <div class="logo-badge"></div>
-      Tadiplus Telecom
+  <div class="app-container">
+    <header class="header">
+      <div class="brand">
+        <div class="brand-icon">AI</div>
+        <h1>Smart Notes 2026</h1>
+      </div>
+      <div class="status-pill">
+        <div class="status-dot"></div>
+        Live System
+      </div>
+    </header>
+
+    <main class="card">
+      <div class="card-title">Schnellnotiz erstellen</div>
+      <textarea id="note-text" placeholder="Schreibe deine Gedanken oder Notizen hier..."></textarea>
+      <button class="btn" onclick="saveNote()">Notiz speichern</button>
+    </main>
+
+    <section class="card">
+      <div class="card-title">Letzte Einträge</div>
+      <div id="history-list" class="history">
+        <div class="history-item">Noch keine Notizen gespeichert.</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- STYLISCHER CHAT-BUTTON UNTEN LINKS -->
+  <div class="custom-chat-trigger" onclick="openPlacetelChat()">
+    <div class="custom-chat-avatar">💬</div>
+    <div class="custom-chat-text">
+      <span class="custom-chat-title">AI Assistent</span>
+      <span class="custom-chat-subtitle">Online • Jetzt chatten</span>
     </div>
-    <ul class="nav-links">
-      <li><a href="#loesungen">Lösungen</a></li>
-      <li><a href="#ki">KI Assistant</a></li>
-      <li><a href="#kontakt">Kontakt</a></li>
-    </ul>
-  </nav>
+  </div>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="tag">NEXT GEN TELECOM 2026</div>
-    <h1>Telekommunikation neu gedacht mit intelligenter KI.</h1>
-    <p>Willkommen bei der Tadiplus Telecom GmbH. Wir verbinden hochmoderne Telefonie-Infrastruktur mit autonomer KI-Assistenz für Ihr Unternehmen.</p>
-    <a href="#chat" class="cta-button" onclick="window.PlacetelLivechat && window.PlacetelLivechat.open(); return false;">Jetzt Beratung starten</a>
-  </section>
+  <script>
+    function openPlacetelChat() {
+      // Öffnet das Placetel Chat-Fenster direkt beim Klick
+      if (window.PlacetelLivechat && typeof window.PlacetelLivechat.open === 'function') {
+        window.PlacetelLivechat.open();
+      } else {
+        // Fallback-Trigger falls das Widget anders geladen ist
+        const widgetBtn = document.querySelector('[data-widget-id]');
+        if (widgetBtn) widgetBtn.click();
+      }
+    }
 
-  <!-- Feature Grid -->
-  <section class="features" id="loesungen">
-    <div class="card">
-      <div class="card-icon">⚡</div>
-      <h3>Echtzeit KI-Support</h3>
-      <p>Unser intelligenter Assistent beantwortet Fragen Ihrer Kunden rund um die Uhr in Sekundenschnelle.</p>
-    </div>
+    function saveNote() {
+      const text = document.getElementById('note-text').value.trim();
+      if (!text) return alert("Bitte Notiz eingeben.");
+      let history = JSON.parse(localStorage.getItem('app_notes_2026') || '[]');
+      history.unshift({ time: new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }), text });
+      localStorage.setItem('app_notes_2026', JSON.stringify(history));
+      document.getElementById('note-text').value = '';
+      loadHistory();
+    }
 
-    <div class="card">
-      <div class="card-icon">🌐</div>
-      <h3>Moderne VoIP-Netze</h3>
-      <p>Höchste Sprachqualität und zuverlässige Erreichbarkeit über modernste Cloud-Telefonie-Standards.</p>
-    </div>
+    function loadHistory() {
+      const historyEl = document.getElementById('history-list');
+      let history = JSON.parse(localStorage.getItem('app_notes_2026') || '[]');
+      if (history.length === 0) return;
+      historyEl.innerHTML = history.map(item => `<div class="history-item"><span>${item.text}</span> <small>${item.time}</small></div>`).join('');
+    }
 
-    <div class="card">
-      <div class="card-icon">🔒</div>
-      <h3>Sicherheit nach DSGVO</h3>
-      <p>Ihre Daten und Gesprächsverläufe werden nach den strengsten europäischen Datenschutz-Standards verarbeitet.</p>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer>
-    <p>© 2026 Tadiplus Telecom GmbH. Alle Rechte vorbehalten.</p>
-  </footer>
+    loadHistory();
+  </script>
 
   <!-- Placetel Livechat-Widget -->
   <script src="https://aipro.placetel.de/livechat/embed.js" data-widget-id="lcw_019ffebf-6b34-7140-8cc5-4b0dbd1277db" async></script>
