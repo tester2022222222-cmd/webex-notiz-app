@@ -83,8 +83,6 @@
       box-shadow: 0 0 8px #10b981; animation: pulse 2s infinite;
     }
 
-    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-
     .card {
       background: var(--card-bg); backdrop-filter: blur(16px);
       border: 1px solid var(--card-border); padding: 28px; border-radius: 24px;
@@ -114,81 +112,69 @@
       border: 1px solid var(--card-border); font-size: 13px; color: var(--text-muted);
     }
 
-    /* ------------------------------------------------------------- */
-    /* COOLER NEUER CHAT-BUTTON UNTEN LINKS 2026 STYLE               */
-    /* ------------------------------------------------------------- */
-    .custom-chat-trigger {
+    /* ------------------------------------------------------------------- */
+    /* LIVE CHAT BADGE & WIDGET UNTEN LINKS PLATZIEREN & BLINKEN LASSEN    */
+    /* ------------------------------------------------------------------- */
+
+    /* 1. Das Placetel Chat-Widget per CSS nach UNTEN LINKS verschieben */
+    div[id*="placetel"], 
+    iframe[id*="placetel"],
+    #placetel-livechat-embed,
+    .placetel-livechat-container {
+      left: 20px !important;
+      right: auto !important;
+    }
+
+    /* 2. Das pulsend/blinkende "Live Chat"-Schild unten links */
+    .chat-live-badge {
       position: fixed;
       bottom: 24px;
       left: 24px;
-      z-index: 9999;
+      z-index: 999999;
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 12px 20px;
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(0, 242, 254, 0.3);
+      gap: 10px;
+      padding: 10px 18px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 242, 254, 0.4);
       border-radius: 100px;
-      color: #fff;
-      cursor: pointer;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 242, 254, 0.2);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .custom-chat-trigger:hover {
-      transform: translateY(-4px) scale(1.03);
-      border-color: var(--primary);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 242, 254, 0.4);
-    }
-
-    .custom-chat-avatar {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      color: #000;
-      position: relative;
-    }
-
-    .custom-chat-avatar::after {
-      content: '';
-      position: absolute;
-      top: 0; right: 0;
-      width: 10px; height: 10px;
-      background: #10b981;
-      border: 2px solid #090a0f;
-      border-radius: 50%;
-    }
-
-    .custom-chat-text {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .custom-chat-title {
+      color: #ffffff;
       font-size: 13px;
       font-weight: 700;
-      color: #fff;
-      line-height: 1.2;
+      cursor: pointer;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 242, 254, 0.25);
+      transition: all 0.3s ease;
+      animation: floatGlow 3s infinite alternate;
     }
 
-    .custom-chat-subtitle {
-      font-size: 11px;
-      color: var(--primary);
-      font-weight: 500;
+    .chat-live-badge:hover {
+      transform: scale(1.05) translateY(-2px);
+      border-color: var(--primary);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(0, 242, 254, 0.5);
     }
 
-    /* Das originale hässliche Placetel-Standard-Icon ausblenden */
-    #placetel-livechat-button, 
-    iframe[id*="placetel-livechat-button"] {
-      opacity: 0 !important;
-      pointer-events: none !important;
+    /* Der grün blinkende Online-Punkt */
+    .live-dot {
+      width: 10px;
+      height: 10px;
+      background-color: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #10b981;
+      animation: blink 1.5s infinite ease-in-out;
+    }
+
+    /* Blink- & Pulsier-Animationen */
+    @keyframes blink {
+      0% { opacity: 1; transform: scale(1); box-shadow: 0 0 10px #10b981; }
+      50% { opacity: 0.3; transform: scale(0.85); box-shadow: 0 0 2px #10b981; }
+      100% { opacity: 1; transform: scale(1); box-shadow: 0 0 10px #10b981; }
+    }
+
+    @keyframes floatGlow {
+      0% { box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 242, 254, 0.2); }
+      100% { box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 22px rgba(0, 242, 254, 0.45); }
     }
   </style>
 </head>
@@ -220,24 +206,21 @@
     </section>
   </div>
 
-  <!-- STYLISCHER CHAT-BUTTON UNTEN LINKS -->
-  <div class="custom-chat-trigger" onclick="openPlacetelChat()">
-    <div class="custom-chat-avatar">💬</div>
-    <div class="custom-chat-text">
-      <span class="custom-chat-title">AI Assistent</span>
-      <span class="custom-chat-subtitle">Online • Jetzt chatten</span>
-    </div>
+  <!-- BLINKENDES UNTEN-LINKS CHAT-SCHILD -->
+  <div class="chat-live-badge" onclick="triggerPlacetelChat()">
+    <div class="live-dot"></div>
+    <span>Live Chat • Online</span>
   </div>
 
   <script>
-    function openPlacetelChat() {
-      // Öffnet das Placetel Chat-Fenster direkt beim Klick
+    function triggerPlacetelChat() {
+      // Klick öffnet den echten Placetel Chat
       if (window.PlacetelLivechat && typeof window.PlacetelLivechat.open === 'function') {
         window.PlacetelLivechat.open();
       } else {
-        // Fallback-Trigger falls das Widget anders geladen ist
-        const widgetBtn = document.querySelector('[data-widget-id]');
-        if (widgetBtn) widgetBtn.click();
+        // Fallback-Klick auf das Widget-Element
+        const widgetEl = document.querySelector('iframe[id*="placetel"], div[id*="placetel"]');
+        if (widgetEl) widgetEl.click();
       }
     }
 
